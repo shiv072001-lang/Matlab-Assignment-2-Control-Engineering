@@ -45,3 +45,99 @@ Ghigher_tf
 disp('Reduced 2nd order system is equal to:');
 Glower_tf
 
+
+%% Pole and damping calculation
+
+% Calculating the poles of the original system
+pHigher = pole(Ghigher);
+
+% Calculating the poles of reduced system
+pLower = pole(Glower);
+
+% Displaying all poles in the command window
+disp('Poles of the original system are as follows:');
+disp(pHigher);
+
+disp('Poles of reduced system are as follows:');
+disp(pLower);
+
+% damp command is giving the natural frequency and damping ratio
+[wnHigher, zetaHigher, pHigherDamp] = damp(Ghigher);
+[wnLower, zetaLower, pLowerDamp] = damp(Glower);
+
+% Creating tabulation for the original system pole details
+higherPoleTable = table(pHigherDamp, wnHigher, zetaHigher, ...
+    'VariableNames', {'Pole', 'NaturalFrequency', ...
+    'DampingRatio'});
+
+% Creating tabulation for the reduced system pole details
+lowerPoleTable = table(pLowerDamp, wnLower, zetaLower, ...
+    'VariableNames', {'Pole', 'NaturalFrequency', ...
+    'DampingRatio'});
+    
+disp('Original system pole details are given as follows:');
+disp(higherPoleTable);
+
+disp('Reduced system Pole details are as follows:');
+disp(lowerPoleTable);
+
+%% Step response calculation are to be discussed in the below section
+
+% Time is kept same for both the system
+t = 0:0.01:10;
+
+% Calculating the step response of original system
+[yHigher, tHigher] = step(Ghigher, t);
+
+% Calculating the step response of reduced system
+[yLower, tLower] = step(Glower, t);
+
+% Squeeze command is making the output into simple column
+yHigher = squeeze(yHigher); 
+yLower = squeeze(yLower);
+
+% Stepinfo command is used in calculating the important response values
+infoHigher = stepinfo(yHigher, tHigher, 1);
+infoLower = stepinfo(yLower, tLower, 1);
+
+% Stepinfo command is used in calculating important response values
+infoHigher = stepinfo(yHigher, tHigher, 1);
+infoLower = stepinfo(yLower, tLower, 1);
+
+% delay time is taken when the output first reaches to 50 percent
+indexHigher = find(yHigher >= 0.5, 1, 'first');
+indexLower = find(yLower >= 0.5, 1, 'first');
+
+% getting the time value from the index
+delayHigher = tHigher(indexHigher);
+delayLower = tLower(indexLower);
+
+%% Creating comparison Table 
+
+% Now incorporating names for both system
+SystemName = {'Original 6th order'; ...
+    'Reduced 2nd order'};
+
+% Taking the real time values 
+RiseTime = [infoHigher.RiseTime; ...
+    infoLower.RiseTime];
+
+% Taking the settling time values
+SettlingTime = [infoHigher.SettlingTime; ...
+    infoLower.SettlingTime];
+
+ % Taking in the overshoot values
+ Overshoot = [infoHigher.Overshoot; ...
+    infoLower.Overshoot];
+
+% Combining all the values into one table
+resultTable = table(SystemName, RiseTime, DelayTime, ...
+    SettlingTime, Overshoot);
+
+disp('Time response comparison is as follows:');
+disp(resultTable);
+
+
+
+
+    
