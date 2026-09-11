@@ -137,6 +137,35 @@ resultTable = table(SystemName, RiseTime, DelayTime, ...
 disp('Time response comparison is as follows:');
 disp(resultTable);
 
+%% Percentage difference calculation 
+
+% Finding the rise time difference between both system riseError = 100 * abs(infoLower.RiseTime ...
+    - infoHigher.RiseTime) / infoHigher.RiseTime;
+
+% Finding the delay time difference delayError = 100 * abs(delayLower ...
+    - delayHigher) / delayHigher;
+
+% Finding the settling time difference settlingError = 100 * abs(infoLower.SettlingTime ...
+    - infoHigher.SettlingTime) ...
+    / infoHigher.SettlingTime;
+
+% Finding overshoot difference overshootError = 100 * abs(infoLower.Overshoot ...
+    - infoHigher.Overshoot) ...
+    / infoHigher.Overshoot;
+
+% displaying all the differences in the command window 
+
+fprintf('\nPercentage difference values:\n');
+
+fprintf('Rise the time difference = %.2f %%\n', ... riseError);
+
+fprintf('Delay time difference = %.2f %%\n', ...  delayError);
+
+fprintf('Settling time difference = %.2f %%\n', ... settlingError);
+
+fprintf('Overshoot difference = %.2f %%\n', ... overshootError);
+
+
 
 
 
