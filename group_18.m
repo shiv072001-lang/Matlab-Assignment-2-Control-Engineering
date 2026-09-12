@@ -121,6 +121,9 @@ SystemName = {'Original 6th order'; ...
 % Taking the real time values 
 RiseTime = [infoHigher.RiseTime; ...
     infoLower.RiseTime];
+    
+% Taking the delay time values
+DelayTime = [delayHigher; delayLower];
 
 % Taking the settling time values
 SettlingTime = [infoHigher.SettlingTime; ...
@@ -139,31 +142,30 @@ disp(resultTable);
 
 %% Percentage difference calculation 
 
-% Finding the rise time difference between both system riseError = 100 * abs(infoLower.RiseTime ...
+% Finding the rise time difference
+riseError = 100 * abs(infoLower.RiseTime ...
     - infoHigher.RiseTime) / infoHigher.RiseTime;
 
-% Finding the delay time difference delayError = 100 * abs(delayLower ...
+% Finding the delay time difference
+delayError = 100 * abs(delayLower ...
     - delayHigher) / delayHigher;
 
-% Finding the settling time difference settlingError = 100 * abs(infoLower.SettlingTime ...
+% Finding the settling time difference
+settlingError = 100 * abs(infoLower.SettlingTime ...
     - infoHigher.SettlingTime) ...
     / infoHigher.SettlingTime;
 
-% Finding overshoot difference overshootError = 100 * abs(infoLower.Overshoot ...
+% Finding the overshoot difference
+overshootError = 100 * abs(infoLower.Overshoot ...
     - infoHigher.Overshoot) ...
     / infoHigher.Overshoot;
 
 % displaying all the differences in the command window 
 
-fprintf('\nPercentage difference values:\n');
-
-fprintf('Rise the time difference = %.2f %%\n', ... riseError);
-
-fprintf('Delay time difference = %.2f %%\n', ...  delayError);
-
-fprintf('Settling time difference = %.2f %%\n', ... settlingError);
-
-fprintf('Overshoot difference = %.2f %%\n', ... overshootError);
+fprintf('Rise time difference = %.2f %%\n', riseError);
+fprintf('Delay time difference = %.2f %%\n', delayError);
+fprintf('Settling time difference = %.2f %%\n', settlingError);
+fprintf('Overshoot difference = %.2f %%\n', overshootError);
 
 %% Pole Zero Graphs
 
@@ -172,8 +174,24 @@ figure('Color', 'w', 'Position', [100 100 1200 500]);
 
 % Distincting pole zero graph for the original system
 subplot(1, 2, 1);
-pzmap(Ghigher);
 
+% Adding for Pole Labels
+plot(real(pHigher), imag(pHigher), 'bx', ...
+    'MarkerSize', 10, 'LineWidth', 1.5);
+
+hold on;
+
+for k = 1:length(pHigher)
+
+    poleLabel = sprintf(' %.0f %+.0fi', ...
+        real(pHigher(k)), imag(pHigher(k)));
+
+    text(real(pHigher(k)), imag(pHigher(k)), ...
+        poleLabel, ...
+        'VerticalAlignment', 'bottom');
+
+end
+   
 % Removing any overlapping between the indices for clear presentation
 grid off;
 
@@ -184,24 +202,28 @@ title('Original 6th Order System');
 xlabel('Real Axis');
 ylabel('Imaginary Axis');
 
-% Incorporating the graph background in white and letters black
-set(gca, 'Color', 'w', ...
-    'XColor', 'k', 'YColor', 'k');
-
 % Creating the pole zero graph for reduced system
 subplot(1, 2, 2);
-pzmap(Glower);
 
+% Adding for Pole labels
+plot(real(pLower), imag(pLower), 'rx', ...
+    'MarkerSize', 10, 'LineWidth', 1.5);
+
+hold on;
+
+for k = 1:length(pLower)
+    poleLabel = sprintf(' %.0f %+.0fi', ...
+        real(pLower(k)), imag(pLower(k)));
+
+    text(real(pLower(k)), imag(pLower(k)), ...
+        poleLabel, 'VerticalAlignment', 'bottom');
+end
 xlim([-3 1]);
 ylim([-3 3]);
 
 title('Reduced 2nd Order System');
 xlabel('Real Axis');
 ylabel('Imaginary Axis');
-
-% Incorporating the graph background in white and letters black
-set(gca, 'Color', 'w', ...
-    'XColor', 'k', 'YColor', 'k');
 
 % Saving the clear graph in 300 dpi for the report
 print(gcf, 'pole_zero_comparison.png', ...
