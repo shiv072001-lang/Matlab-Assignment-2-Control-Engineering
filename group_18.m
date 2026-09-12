@@ -165,6 +165,47 @@ fprintf('Settling time difference = %.2f %%\n', ... settlingError);
 
 fprintf('Overshoot difference = %.2f %%\n', ... overshootError);
 
+%% Pole Zero Graphs
+
+% % Plotting graph clearly for the poles
+figure('Color', 'w', 'Position', [100 100 1200 500]);
+
+% Distincting pole zero graph for the original system
+subplot(1, 2, 1);
+pzmap(Ghigher);
+
+% Removing any overlapping between the indices for clear presentation
+grid off;
+
+xlim([-24 2]);
+ylim([-3 3]);
+
+title('Original 6th Order System');
+xlabel('Real Axis');
+ylabel('Imaginary Axis');
+
+% Incorporating the graph background in white and letters black
+set(gca, 'Color', 'w', ...
+    'XColor', 'k', 'YColor', 'k');
+
+% Creating the pole zero graph for reduced system
+subplot(1, 2, 2);
+pzmap(Glower);
+
+xlim([-3 1]);
+ylim([-3 3]);
+
+title('Reduced 2nd Order System');
+xlabel('Real Axis');
+ylabel('Imaginary Axis');
+
+% Incorporating the graph background in white and letters black
+set(gca, 'Color', 'w', ...
+    'XColor', 'k', 'YColor', 'k');
+
+% Saving the clear graph in 300 dpi for the report
+print(gcf, 'pole_zero_comparison.png', ...
+    '-dpng', '-r300');
 
 
 
